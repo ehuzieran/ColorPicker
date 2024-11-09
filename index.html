@@ -1,202 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Colour Palette Generator</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 10px;
-        }
-
-        /* Main container for the layout */
-        .main-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-top: 20px;
-        }
-
-        /* Selected color box styling */
-        .color-box-selected {
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            padding: 10px;
-            color: white;
-            border-radius: 5px;
-            font-size: 12px;
-            width: 120px;
-            height: 120px;
-            margin-top: -60px; /* Adjust this value as needed */
-        }
-
-        /* Palette container styling */
-        .palette-section {
-            flex-grow: 1; /* Take up remaining space */
-            margin-right: 20px;
-        }
-
-        /* Color palette container */
-        .palette-container {
-            display: flex;
-            gap: 5px; /* Space between color boxes */
-            margin-top: 5px;
-        }
-
-        /* Individual color box */
-        .color-box {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            color: white;
+        * {
+            margin: 0;
             padding: 0;
             box-sizing: border-box;
-            text-align: center;
-            border-radius: 0px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
-        /* Specific colors for each color box */
-        .color1 { background-color: #1C7C54; }
-        .color2 { background-color: #73E2A7; color: #333; }
-        .color3 { background-color: #DEF4C6; color: #333; }
-        .color4 { background-color: #1B512D; }
-        .color5 { background-color: #B1CF5F; color: #333; }
-
-        /* Styling for the hex code */
-        .hex-code {
-            font-weight: bold;
-            font-size: 10px;
-            margin-bottom: 5px;
+        body {
+            width: 250px;
+            padding: 12px;
+            background: #ffffff;
         }
 
-        /* Selected color box styling */
-        .selected {
-            background-color: #d79226;
-            padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .color-info {
-            color: #333;
-            margin-top: 10px;
-        }
-
-        .color-info span {
-            display: block;
-            padding: 2px 6px;
+        .container {
             background: white;
-            color: #333;
-            border-radius: 3px;
-            margin-top: 5px;
+            border-radius: 8px;
         }
 
-        /* Color Picker styling */
+        h1 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+
         .color-picker {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 14px;
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
-        .color-picker input[type="color"] {
+        input[type="color"] {
+            width: 32px;
+            height: 32px;
             border: none;
-            width: 40px;
-            height: 40px;
+            border-radius: 4px;
             cursor: pointer;
         }
 
+        #selectedHex {
+            font-size: 14px;
+            color: #566573;
+            font-family: monospace;
+        }
+
+        .palette-section h2 {
+            font-size: 14px;
+            color: #566573;
+            margin: 8px 0 4px;
+        }
+
+        .color-container {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .color-box {
+            flex: 1;
+            height: 25px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .color-box:hover {
+            transform: scale(1.05);
+        }
+
+        .hex-code {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 8px;
+            padding: 2px;
+            text-align: center;
+            font-family: monospace;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .color-box:hover .hex-code {
+            opacity: 1;
+        }
+
+        .export-button {
+            width: 100%;
+            padding: 8px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+
+        .export-button:hover {
+            background: #27ae60;
+        }
     </style>
 </head>
 <body>
-
-<!-- Color Picker Section -->
-<div class="color-picker">
-    <label for="Picker">Choose Color:</label>
-    <input type="color" id="Picker" value="#d79226">
-</div>
-
-<!-- Main layout container -->
-<div class="main-container">
-    <!-- Left section: Color Palettes -->
-    <div class="palette-section">
-        <h4>Color Palettes</h4>
+    <div class="container">
+        <h1>Colour Picker</h1>
+        <div class="color-picker">
+            <input type="color" id="Picker" value="#019337">
+            <span id="selectedHex">#019337</span>
+        </div>
         
-        <div><h5>Complementary</h5></div>
-<div class="palette-container">
-    <div id="complimentColorOne" class="color-box color1">
-        <div id="complimentHexOne" class="hex-code">#1C7C54</div>
+        <div class="palette-section">
+            <h2>Complementary</h2>
+            <div class="complementary color-container"></div>
+            
+            <h2>Analogous</h2>
+            <div class="analogous color-container"></div>
+            
+            <h2>Monochromatic</h2>
+            <div class="monochromatic color-container"></div>
+        </div>
+
+        <button class="export-button">Export Colours</button>
     </div>
-            <div class="color-box color2">
-                <div class="hex-code">#73E2A7</div>
-            </div>
-            <div class="color-box color3">
-                <div class="hex-code">#DEF4C6</div>
-            </div>
-            <div class="color-box color4">
-                <div class="hex-code">#1B512D</div>
-            </div>
-            <div class="color-box color5">
-                <div class="hex-code">#B1CF5F</div>
-            </div>
-        </div>
-
-        <div><h5>Analogous</h5></div>
-        <div class="palette-container">
-            <div class="color-box color1">
-                <div class="hex-code">#1C7C54</div>
-            </div>
-            <div class="color-box color2">
-                <div class="hex-code">#73E2A7</div>
-            </div>
-            <div class="color-box color3">
-                <div class="hex-code">#DEF4C6</div>
-            </div>
-            <div class="color-box color4">
-                <div class="hex-code">#1B512D</div>
-            </div>
-            <div class="color-box color5">
-                <div class="hex-code">#B1CF5F</div>
-            </div>
-        </div>
-
-        <div><h5>Monochromatic</h5></div>
-        <div class="palette-container">
-            <div class="color-box color1">
-                <div class="hex-code">#1C7C54</div>
-            </div>
-            <div class="color-box color2">
-                <div class="hex-code">#73E2A7</div>
-            </div>
-            <div class="color-box color3">
-                <div class="hex-code">#DEF4C6</div>
-            </div>
-            <div class="color-box color4">
-                <div class="hex-code">#1B512D</div>
-            </div>
-            <div class="color-box color5">
-                <div class="hex-code">#B1CF5F</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Right section: Selected Color -->
-    <div class="color-box-selected selected" id="selectedColor">
-        <div class="title">Selected</div>
-        <div class="color-info">
-            <span id="selectedHex">#d79226</span>
-            <span id="selectedRgb">rgb(215, 146, 38)</span>
-            <span id="selectedHsl">hsl(37, 70%, 50%)</span>
-            <span id="selectedHsv">hsv(37, 82%, 84%)</span>
-        </div>
-    </div>
-</div>
-
-
+    <script src="script.js"></script>
 </body>
 </html>
