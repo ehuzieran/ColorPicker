@@ -1,0 +1,11 @@
+{
+    "name": "Color Pallete Extension",
+    "version": "1.0.0",
+    "description": "This is an extension to pick a color off the webpage and generate a color pallete",
+    "manifest_version": 3,
+    "author": "Eva",
+    "action": {
+        "default_popup": "index.html",
+        "default_title": "Color Pallete Extension"
+    }
+}

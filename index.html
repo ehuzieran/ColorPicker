@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colour Palette Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+        }
+
+        /* Main container for the layout */
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        /* Selected color box styling */
+        .color-box-selected {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            padding: 10px;
+            color: white;
+            border-radius: 5px;
+            font-size: 12px;
+            width: 120px;
+            height: 120px;
+            margin-top: -60px; /* Adjust this value as needed */
+        }
+
+        /* Palette container styling */
+        .palette-section {
+            flex-grow: 1; /* Take up remaining space */
+            margin-right: 20px;
+        }
+
+        /* Color palette container */
+        .palette-container {
+            display: flex;
+            gap: 5px; /* Space between color boxes */
+            margin-top: 5px;
+        }
+
+        /* Individual color box */
+        .color-box {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            color: white;
+            padding: 0;
+            box-sizing: border-box;
+            text-align: center;
+            border-radius: 0px;
+        }
+
+        /* Specific colors for each color box */
+        .color1 { background-color: #1C7C54; }
+        .color2 { background-color: #73E2A7; color: #333; }
+        .color3 { background-color: #DEF4C6; color: #333; }
+        .color4 { background-color: #1B512D; }
+        .color5 { background-color: #B1CF5F; color: #333; }
+
+        /* Styling for the hex code */
+        .hex-code {
+            font-weight: bold;
+            font-size: 10px;
+            margin-bottom: 5px;
+        }
+
+        /* Selected color box styling */
+        .selected {
+            background-color: #d79226;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .color-info {
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .color-info span {
+            display: block;
+            padding: 2px 6px;
+            background: white;
+            color: #333;
+            border-radius: 3px;
+            margin-top: 5px;
+        }
+
+        /* Color Picker styling */
+        .color-picker {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .color-picker input[type="color"] {
+            border: none;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Color Picker Section -->
+<div class="color-picker">
+    <label for="Picker">Choose Color:</label>
+    <input type="color" id="Picker" value="#d79226">
+</div>
+
+<!-- Main layout container -->
+<div class="main-container">
+    <!-- Left section: Color Palettes -->
+    <div class="palette-section">
+        <h4>Color Palettes</h4>
+        
+        <div><h5>Complementary</h5></div>
+<div class="palette-container">
+    <div id="complimentColorOne" class="color-box color1">
+        <div id="complimentHexOne" class="hex-code">#1C7C54</div>
+    </div>
+            <div class="color-box color2">
+                <div class="hex-code">#73E2A7</div>
+            </div>
+            <div class="color-box color3">
+                <div class="hex-code">#DEF4C6</div>
+            </div>
+            <div class="color-box color4">
+                <div class="hex-code">#1B512D</div>
+            </div>
+            <div class="color-box color5">
+                <div class="hex-code">#B1CF5F</div>
+            </div>
+        </div>
+
+        <div><h5>Analogous</h5></div>
+        <div class="palette-container">
+            <div class="color-box color1">
+                <div class="hex-code">#1C7C54</div>
+            </div>
+            <div class="color-box color2">
+                <div class="hex-code">#73E2A7</div>
+            </div>
+            <div class="color-box color3">
+                <div class="hex-code">#DEF4C6</div>
+            </div>
+            <div class="color-box color4">
+                <div class="hex-code">#1B512D</div>
+            </div>
+            <div class="color-box color5">
+                <div class="hex-code">#B1CF5F</div>
+            </div>
+        </div>
+
+        <div><h5>Monochromatic</h5></div>
+        <div class="palette-container">
+            <div class="color-box color1">
+                <div class="hex-code">#1C7C54</div>
+            </div>
+            <div class="color-box color2">
+                <div class="hex-code">#73E2A7</div>
+            </div>
+            <div class="color-box color3">
+                <div class="hex-code">#DEF4C6</div>
+            </div>
+            <div class="color-box color4">
+                <div class="hex-code">#1B512D</div>
+            </div>
+            <div class="color-box color5">
+                <div class="hex-code">#B1CF5F</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right section: Selected Color -->
+    <div class="color-box-selected selected" id="selectedColor">
+        <div class="title">Selected</div>
+        <div class="color-info">
+            <span id="selectedHex">#d79226</span>
+            <span id="selectedRgb">rgb(215, 146, 38)</span>
+            <span id="selectedHsl">hsl(37, 70%, 50%)</span>
+            <span id="selectedHsv">hsv(37, 82%, 84%)</span>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
