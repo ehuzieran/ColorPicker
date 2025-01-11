@@ -2,6 +2,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const picker = document.getElementById('Picker');
     const selectedHex = document.getElementById('selectedHex');
 
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            const notification = document.createElement('div');
+            notification.className = 'copy-notification';
+            notification.textContent = 'Copied!';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 1000);
+        });
+    };
+
     const hexToRgb = hex => ({
         r: parseInt(hex.slice(1, 3), 16),
         g: parseInt(hex.slice(3, 5), 16),
@@ -84,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
             box.style.backgroundColor = hex;
             box.querySelector('.hex-code').textContent = hex;
+            box.onclick = () => copyToClipboard(hex);
         });
     };
 

@@ -1,11 +1,20 @@
 {
-    "name": "Color Pallete Extension",
+    "name": "Colour Palette Extension",
     "version": "1.0.0",
-    "description": "This is an extension to pick a color off the webpage and generate a color pallete",
+    "description": "This is an extension to pick a colour off the webpage and generate a colour palette to export.",
     "manifest_version": 3,
-    "author": "Eva",
+    "author": "Eva & Kenzo",
+    "permissions": [
+        "tabs"
+    ],
     "action": {
         "default_popup": "index.html",
-        "default_title": "Color Pallete Extension"
+        "default_title": "Colour Palette Extension",
+        "default_icon": {
+            "128": "icon.png"
+        }
+    },
+    "icons": {
+        "128": "icon.png"
     }
 }
