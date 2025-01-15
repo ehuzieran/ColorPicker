@@ -1,14 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const picker = document.getElementById('Picker');
-    const selectedHex = document.getElementById('selectedHex');
+    const pickerButton = document.getElementById('PickerButton');
+    const manualColorPicker = document.getElementById('manualColorPicker');
+    const colorInfo = document.getElementById('colorInfo');
+    const colorPreview = document.getElementById('colorPreview');
 
-    const copyToClipboard = (text) => {
+    const updateColorPreview = (hexCode) => {
+        colorPreview.style.backgroundColor = hexCode;
+        colorInfo.textContent = hexCode;
+    };
+
+    // Handle manual color picker if present
+    if (manualColorPicker) {
+        manualColorPicker.addEventListener('input', (e) => {
+            const hex = e.target.value;
+            updateAllColors(hex);  // Updates all color schemes based on the selected color
+            colorPreview.style.backgroundColor = hex;  // Updates the preview box
+        });
+    }
+
+    const copyToClipboard = (text, hexCodeElement) => {
         navigator.clipboard.writeText(text).then(() => {
             const notification = document.createElement('div');
             notification.className = 'copy-notification';
             notification.textContent = 'Copied!';
-            document.body.appendChild(notification);
-            
+
+            // Position notification relative to the hex code element
+            notification.style.position = 'absolute';
+            notification.style.bottom = '0';
+            notification.style.left = '0';
+            notification.style.right = '0';
+            notification.style.textAlign = 'center';
+            notification.style.background = 'rgba(0, 0, 0, 0.8)';
+            notification.style.color = 'white';
+            notification.style.fontSize = '12px';
+            notification.style.padding = '2px';
+            notification.style.borderRadius = '4px';
+
+            hexCodeElement.appendChild(notification);
+
             setTimeout(() => {
                 notification.remove();
             }, 1000);
@@ -40,14 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const hue2rgb = (p, q, t) => {
             if (t < 0) t += 1;
             if (t > 1) t -= 1;
-            return t < 1/6 ? p + (q - p) * 6 * t : t < 1/2 ? q : t < 2/3 ? p + (q - p) * (2/3 - t) * 6 : p;
+            return t < 1 / 6 ? p + (q - p) * 6 * t : t < 1 / 2 ? q : t < 2 / 3 ? p + (q - p) * (2 / 3 - t) * 6 : p;
         };
         const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         const p = 2 * l - q;
         return {
-            r: Math.round(hue2rgb(p, q, h + 1/3) * 255),
+            r: Math.round(hue2rgb(p, q, h + 1 / 3) * 255),
             g: Math.round(hue2rgb(p, q, h) * 255),
-            b: Math.round(hue2rgb(p, q, h - 1/3) * 255)
+            b: Math.round(hue2rgb(p, q, h - 1 / 3) * 255)
         };
     };
 
@@ -96,42 +125,59 @@ document.addEventListener('DOMContentLoaded', () => {
             const rgb = hslToRgb(colors[i].h, colors[i].s, colors[i].l);
             const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
             box.style.backgroundColor = hex;
-            box.querySelector('.hex-code').textContent = hex;
-            box.onclick = () => copyToClipboard(hex);
+
+            const hexCodeElement = box.querySelector('.hex-code');
+            hexCodeElement.textContent = hex;
+
+            box.onclick = () => copyToClipboard(hex, hexCodeElement);
         });
     };
 
     const updateAllColors = hex => {
-        selectedHex.textContent = hex;
+        // Update the hex value in the color info box
+        const colorPreview = document.getElementById('colorPreview');
+        colorPreview.style.backgroundColor = hex;
+
+        // Convert hex to RGB, HSL, and HSV
         const rgb = hexToRgb(hex);
         const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-        Object.entries(generateColors).forEach(([key, generator]) => 
+        const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
+
+        // Update the pre-existing spans with color values
+        document.getElementById('hexValue').textContent = `${hex}`;
+        document.getElementById('rgbValue').textContent = `RGB(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        document.getElementById('hslValue').textContent = `HSL(${Math.round(hsl.h)}°, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`;
+        document.getElementById('hsvValue').textContent = `HSV(${Math.round(hsv.h)}°, ${Math.round(hsv.s)}%, ${Math.round(hsv.v)}%)`;
+
+        // Add copy functionality to each color value
+        document.querySelectorAll('.color-info span').forEach(element => {
+            element.addEventListener('click', () => copyToClipboard(element.textContent, element));
+        });
+
+        // Now, generate the complementary, analogous, and monochromatic colors
+        Object.entries(generateColors).forEach(([key, generator]) =>
             updateColorBoxes(generator(hsl), key));
     };
 
-    createColorBoxes();
-    updateAllColors(picker.value);
-    picker.addEventListener('input', e => updateAllColors(e.target.value));
+    pickerButton.addEventListener('click', async () => {
+        if (!window.EyeDropper) {
+            alert('EyeDropper API is not supported in this browser.');
+            return;
+        }
 
-    document.querySelector('.export-button').addEventListener('click', () => {
-        const getColors = className => Array.from(document.querySelectorAll(`.${className} .color-box .hex-code`))
-            .map(span => span.textContent);
-
-        const exportText = `Selected colour: ${getColorInfo(picker.value)}\n\n` +
-            ['Complementary', 'Analogous', 'Monochromatic'].map(type => 
-                `${type}:\n${getColors(type.toLowerCase())
-                    .map((color, i) => `Box ${i + 1}: ${getColorInfo(color)}`)
-                    .join('\n')}`
-            ).join('\n\n');
-
-        const blob = new Blob([exportText], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'ExportedColours.txt';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        const eyeDropper = new EyeDropper();
+        try {
+            const result = await eyeDropper.open();
+            updateAllColors(result.sRGBHex);
+            if (manualColorPicker) manualColorPicker.value = result.sRGBHex;  // Updates the manual color picker if it exists
+            colorPreview.style.backgroundColor = result.sRGBHex;  // Updates the preview box
+        } catch (err) {
+            console.error('EyeDropper canceled or failed:', err);
+        }
     });
+
+    createColorBoxes();
+    updateAllColors('#019337');
+    if (manualColorPicker) manualColorPicker.value = '#019337';  // Initialize manual color picker if present
+    colorPreview.style.backgroundColor = '#019337';
 });
